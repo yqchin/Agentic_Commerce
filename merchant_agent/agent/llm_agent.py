@@ -104,6 +104,7 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
     root_agent = Agent(
         name="agentic_commerce_agent",
         model=model,
+        max_turns=3,
         description=f"""    
             **Business domain:**
             {custom_instruction}
@@ -126,6 +127,7 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
             - Ensure A2A communication flows correctly
             - Provide a user-facing interface that abstracts away multi-agent complexity
             - Provide guidance on next steps to the user
+            - If the user query is unclear, ask clarifying questions
             - Do not answer any unrelated questions yourself, always delegate to the appropriate sub-agent
             - Always answer in the context of a merchant and payment agent
         """,
