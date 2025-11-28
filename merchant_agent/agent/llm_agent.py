@@ -23,7 +23,7 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
         - Powered by a remote A2A endpoint at the configured agent card URL
 
         **When to use:**
-        - Merchant Agent should delegate to this agent when payment is needed for an order
+        - Agentic Commerce Agent should delegate to this agent when payment is needed for an order
         """,
         agent_card="http://localhost:8002/.well-known/agent-card.json",
         timeout=300.0,
