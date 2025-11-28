@@ -10,7 +10,7 @@ from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 
 logger = logging.getLogger(__name__)
 
-def create_merchant_agent(model: str, agent_name: str = 'merchant_agent') -> Agent:
+def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom_instruction: str = "") -> Agent:
     payment_agent = RemoteA2aAgent(
         name="payment_agent",
         description="""
@@ -105,9 +105,10 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent') -> Age
     root_agent = Agent(
         name="agent_orchestrator",
         model=model,
-        description="""
+        description=f"""
+            {custom_instruction}
+            
             **Role:**
-            - Acts as the central coordinator in the Agentic Commerce workflow.
             - Detects whether the user's request is related to:
                 - Product search
                 - Order creation
