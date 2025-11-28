@@ -74,16 +74,16 @@ class MerchantAgent:
             self.config.session_id = f"{self.config.user_id}_{int(time.time())}"
         
         self.session_id = self.config.session_id
-        set_session_id(self.session_id)
-        
-        # Create session service
-        self.session_service = InMemorySessionService()
-        await self.session_service.create_session(
-            app_name=self.config.app_name,
-            user_id=self.config.user_id,
-            session_id=self.session_id
-        )
-        
+        if get_session_id() != self.session_id:
+            set_session_id(self.session_id)
+            # Create session service
+            self.session_service = InMemorySessionService()
+            await self.session_service.create_session(
+                app_name=self.config.app_name,
+                user_id=self.config.user_id,
+                session_id=self.session_id
+            )
+
         # Create runner
         self.runner = Runner(
             agent=create_merchant_agent(self.model, self.config.app_name, self.config.custom_instruction, self.config.payment_agent_card_url),
