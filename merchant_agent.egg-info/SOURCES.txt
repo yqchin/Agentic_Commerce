@@ -12,3 +12,7 @@ merchant_agent.egg-info/SOURCES.txt
 merchant_agent.egg-info/dependency_links.txt
 merchant_agent.egg-info/requires.txt
 merchant_agent.egg-info/top_level.txt
+merchant_agent/agent/__init__.py
+merchant_agent/agent/llm_agent.py
+merchant_agent/client_tool/__init__.py
+merchant_agent/client_tool/tools.py
