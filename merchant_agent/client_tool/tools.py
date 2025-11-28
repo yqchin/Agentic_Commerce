@@ -109,7 +109,6 @@ async def add_to_cart(
     product_id: str,
     quantity: int,
     variations: Optional[List[Dict[str, str]]] = None,
-    unit_price: Optional[float] = None,
     tool_context: ToolContext = None,
 ) -> str:
     """
@@ -118,9 +117,8 @@ async def add_to_cart(
     Args:
         product_id: Product ID to add
         quantity: Quantity to add (must be > 0)
-        variations: Optional product variations (list of dicts with 'type' and 'name')
-        unit_price: Price per unit (optional - will be calculated if not provided)
-        tool_context: Tool execution context
+        variations: Optional[List[Dict[str, str]]] = None,
+        tool_context: ToolContext = None,
         
     Returns:
         Updated cart summary
@@ -128,35 +126,30 @@ async def add_to_cart(
     try:
         # Get session_id from global state
         session_id = get_session_id()
-        if unit_price is None:
-            merchant_tools = get_merchant_tools()
-            logger.info(f"Calculating price for {product_id} using calculate_total")
-            
-            try:
-                # Call process_new_order just for price calculation (no order creation)
-                calc_result = await merchant_tools.calculate_total(
-                    items=[{
-                        "product_id": product_id,
-                        "quantity": 1,
-                        "variations": variations or []
-                    }]
-                )
-                logger.info(f"Price calculation result: {calc_result}")
-                # Extract unit_price from the calculated order
-                if calc_result and "items" in calc_result and len(calc_result["items"]) > 0:
-                    order_item = calc_result["items"][0]
-                    unit_price = float(order_item.get("unit_price", 0))
-                    logger.info(f"Calculated unit_price for {product_id}: ${unit_price}")
-                else:
-                    logger.warning(f"No items returned from price calculation")
-                    unit_price = 0.0
-                    
-            except Exception as e:
-                logger.error(f"Error calculating price with process_new_order: {e}", exc_info=True)
-                unit_price = 0.0
+        merchant_tools = get_merchant_tools()
+        logger.info(f"Calculating price for {product_id} using calculate_total")
+        
+        # Call process_new_order just for price calculation (no order creation)
+        calc_result = await merchant_tools.calculate_total(
+            items=[{
+                "product_id": product_id,
+                "quantity": 1,
+                "variations": variations or []
+            }]
+        )
+        logger.info(f"Price calculation result: {calc_result}")
+
+        # Extract unit_price from the calculated order
+        if calc_result and "items" in calc_result and len(calc_result["items"]) > 0:
+            order_item = calc_result["items"][0]
+            unit_price = float(order_item.get("unit_price", 0))
+            logger.info(f"Calculated unit_price for {product_id}: ${unit_price}")
+        else:
+            logger.warning(f"No items returned from price calculation")
+            unit_price = 0.0
         
         cart_service = get_cart_service()
-        logger.info(f"Adding to cart: {product_id} x{quantity} @ ${unit_price} (session: {session_id})")
+        logger.info(f"Adding to cart: {product_id} x{quantity} @ ${unit_price}")
         
         result = cart_service.add_to_cart(session_id, product_id, quantity, variations, unit_price)
         

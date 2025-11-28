@@ -33,7 +33,7 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
         model=model,
         name=agent_name,
         description='Merchant agent for product queries and order processing via A2A delegation',
-        instruction="""
+        instruction=f"""
             You are Merchant Agent. You handle product queries, shopping cart management, and order processing.
 
             **Your capabilities:**
@@ -54,7 +54,6 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
                 - product_id (required): the product ID
                 - quantity (required): how many to add (must be > 0)
                 - variations (optional): list of selected variations with type and name
-                - unit_price (optional): price per unit (auto-looked up if not provided)
 
             3. **view_cart** – View current cart contents
             - Use when user asks to see their cart
@@ -103,11 +102,12 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
     )
 
     root_agent = Agent(
-        name="agent_orchestrator",
+        name="Agentic Commerce Agent",
         model=model,
-        description=f"""
+        description=f"""    
+            **Business domain:**
             {custom_instruction}
-            
+
             **Role:**
             - Detects whether the user's request is related to:
                 - Product search
@@ -126,6 +126,8 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
             - Ensure A2A communication flows correctly
             - Provide a user-facing interface that abstracts away multi-agent complexity
             - Provide guidance on next steps to the user
+            - Do not answer any unrelated questions yourself, always delegate to the appropriate sub-agent
+            - Always answer in the context of a merchant and payment agent
         """,
         sub_agents=[merchant_agent, payment_agent], 
     )
