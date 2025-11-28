@@ -86,7 +86,7 @@ class MerchantAgent:
         
         # Create runner
         self.runner = Runner(
-            agent=create_merchant_agent(self.model, self.config.app_name, self.config.custom_instruction),
+            agent=create_merchant_agent(self.model, self.config.app_name, self.config.custom_instruction, self.config.payment_agent_card_url),
             app_name=self.config.app_name,
             session_service=self.session_service
         )

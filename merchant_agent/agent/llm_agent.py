@@ -10,7 +10,7 @@ from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 
 logger = logging.getLogger(__name__)
 
-def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom_instruction: str = "") -> Agent:
+def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom_instruction: str = "", payment_agent_card_url: str = "") -> Agent:
     payment_agent = RemoteA2aAgent(
         name="payment_agent",
         description="""
@@ -25,7 +25,7 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
         **When to use:**
         - Agentic Commerce Agent should delegate to this agent when payment is needed for an order
         """,
-        agent_card="http://localhost:8002/.well-known/agent-card.json",
+        agent_card=payment_agent_card_url,
         timeout=300.0,
     )
 

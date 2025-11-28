@@ -36,6 +36,9 @@ class MerchantAgentConfig:
     log_level: str = "INFO"
     """Logging level: DEBUG, INFO, WARNING, ERROR"""
     
+    payment_agent_card_url: Optional[str] = None
+    """Agent card URL for the Payment Agent (if using A2A payments)"""
+
     # ========== Advanced Settings ==========
     session_timeout: int = 3600
     """Session timeout in seconds (default: 1 hour)"""
@@ -70,4 +73,5 @@ class MerchantAgentConfig:
             "session_timeout": self.session_timeout,
             "enable_debug": self.enable_debug,
             "custom_instruction": self.custom_instruction,
+            "payment_agent_card_url": self.payment_agent_card_url,
         }
