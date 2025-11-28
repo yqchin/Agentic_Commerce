@@ -3,7 +3,6 @@ Name: merchant_agent
 Version: 0.1.0
 Summary: A comprehensive agent framework designed for agentic commerce.
 Author-email: Fiuu <test@email.com>
-License-Expression: MIT
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 Requires-Dist: google-adk>=0.1.0

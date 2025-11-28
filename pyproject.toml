@@ -11,7 +11,8 @@ requires-python = ">=3.9"
 authors = [
     { name = "Fiuu", email = "test@email.com" }
 ]
-license = "MIT"
+
+license = {file = "LICENSE"} 
 
 dependencies = [
     "google-adk>=0.1.0",
