@@ -102,7 +102,7 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
     )
 
     root_agent = Agent(
-        name="Agentic Commerce Agent",
+        name="agentic_commerce_agent",
         model=model,
         description=f"""    
             **Business domain:**
