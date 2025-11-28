@@ -1,6 +1,6 @@
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["agent", "client_tool"]
+include = ["merchant_agent"] 
 
 [project]
 name = "merchant_agent"

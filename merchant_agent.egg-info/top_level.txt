@@ -1,2 +1,1 @@
-agent
-client_tool
+merchant_agent
