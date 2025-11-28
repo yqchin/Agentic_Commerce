@@ -104,7 +104,6 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
     root_agent = Agent(
         name="agentic_commerce_agent",
         model=model,
-        max_turns=3,
         description=f"""    
             **Business domain:**
             {custom_instruction}
@@ -130,6 +129,13 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
             - If the user query is unclear and not related to any agents, ask clarifying questions
             - Do not answer any unrelated questions yourself, always delegate to the appropriate sub-agent
             - Always answer in the context of a merchant and payment agent
+
+            **Delegation Rules (IMPORTANT):**
+            - Delegate at most twice per user message.
+            - After delegating to a sub-agent, NEVER delegate again for the same request.
+            - If a sub-agent returns output, respond directly to the user based on that output.
+            - Do NOT re-interpret the sub-agent output as a new user instruction.
+            - Avoid delegation loops at all costs.
         """,
         sub_agents=[merchant_agent, payment_agent], 
     )
