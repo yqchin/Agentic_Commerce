@@ -142,11 +142,13 @@ async def add_to_cart(
         # Extract unit_price from the calculated order
         if calc_result and "items" in calc_result and len(calc_result["items"]) > 0:
             order_item = calc_result["items"][0]
-            unit_price = float(order_item.get("unit_price", 0))
+            unit_price = float(order_item.get("unit_price"))
+            product_name = order_item.get("product_name", "")
             logger.info(f"Calculated unit_price for {product_id}: ${unit_price}")
         else:
             logger.warning(f"No items returned from price calculation")
             unit_price = 0.0
+            product_name = ""
         
         cart_service = get_cart_service()
         logger.info(f"Adding to cart: {product_id} x{quantity} @ ${unit_price}")
@@ -158,7 +160,7 @@ async def add_to_cart(
         
         item_count = result.get('item_count', 0)
         total = result.get('total_amount', 0)
-        return f"Added {quantity} x {product_id} to cart. Cart now has {item_count} item(s), total: ${total:.2f}"
+        return f"Added {quantity} x {product_name} to cart. Cart now has {item_count} item(s), total: ${total:.2f}"
 
     except Exception as e:
         logger.error(f"Add to cart error: {e}", exc_info=True)

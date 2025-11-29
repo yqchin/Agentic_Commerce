@@ -460,6 +460,7 @@ class MerchantTools(ABC):
                 raise ValueError(f"Product {product_id} not found")
             
             product = products_list[0]
+            product_name = product["name"]
             
             # Calculate price with variations
             item_price = product["base_price"]
@@ -474,6 +475,7 @@ class MerchantTools(ABC):
             # Add to order
             order_items.append({
                 "product_id": product_id,
+                "product_name": product_name,
                 "quantity": quantity,
                 "unit_price": item_price,
                 "variations": selected_variations if selected_variations else None,
