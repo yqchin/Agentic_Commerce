@@ -140,31 +140,20 @@ async def add_to_cart(
         logger.info(f"Price calculation result: {calc_result}")
 
         # Extract unit_price from the calculated order
-        unit_price = 0.0
-        product_name = ""
-        product_image = ""
-        
         if calc_result and "items" in calc_result and len(calc_result["items"]) > 0:
             order_item = calc_result["items"][0]
             unit_price = float(order_item.get("unit_price"))
             product_name = order_item.get("product_name", "")
-            product_image = order_item.get("product_image", "")
             logger.info(f"Calculated unit_price for {product_id}: ${unit_price}")
         else:
             logger.warning(f"No items returned from price calculation")
+            unit_price = 0.0
+            product_name = ""
         
         cart_service = get_cart_service()
         logger.info(f"Adding to cart: {product_id} x{quantity} @ ${unit_price}")
         
-        result = cart_service.add_to_cart(
-            session_id, 
-            product_id, 
-            quantity, 
-            variations, 
-            unit_price,
-            product_name,
-            product_image
-        )
+        result = cart_service.add_to_cart(session_id, product_id, quantity, variations, unit_price)
         
         if tool_context:
             tool_context.state["cart_result"] = result
@@ -185,13 +174,13 @@ async def view_cart(
     tool_context: ToolContext = None,
 ) -> str:
     """
-    View current shopping cart contents with product images
+    View current shopping cart contents
     
     Args:
         tool_context: Tool execution context
         
     Returns:
-        Cart contents with all items, images, amounts, and totals
+        Cart contents with all items, amounts, and totals
     """
     try:
         # Get session_id from global state
@@ -208,22 +197,10 @@ async def view_cart(
         if result['item_count'] == 0:
             return "Your cart is empty."
         
-        formatted_items = []
-        for item in result.get("items", []):
-            formatted_item = {
-                "product_id": item.get("product_id"),
-                "product_name": item.get("product_name", ""),
-                "product_image": item.get("product_image", ""),
-                "quantity": item.get("quantity"),
-                "unit_price": item.get("unit_price", 0),
-                "amount": item.get("amount", 0),
-                "variations": item.get("variations", [])
-            }
-            formatted_items.append(formatted_item)
-        
+        # Format cart summary with pricing
         summary = {
             "session_id": result["session_id"],
-            "items": formatted_items,
+            "items": result["items"],
             "item_count": result["item_count"],
             "subtotal": result.get("subtotal", 0),
             "shipping_fee": result.get("shipping_fee", 0),

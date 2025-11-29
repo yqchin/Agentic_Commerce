@@ -6,8 +6,20 @@ Stores cart data per session without database
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 import logging
+import asyncio
 
 logger = logging.getLogger(__name__)
+
+
+# Lazy import to avoid circular dependency
+def _get_merchant_tools():
+    """Lazy import of merchant tools to avoid circular dependency"""
+    try:
+        from .tools import get_merchant_tools
+        return get_merchant_tools()
+    except Exception as e:
+        logger.debug(f"Could not import merchant tools: {e}")
+        return None
 
 
 class CartService:
@@ -33,6 +45,7 @@ class CartService:
     ) -> Dict[str, Any]:
         """
         Add item to cart. If item exists, update quantity.
+        Automatically fetches and stores product name and image if not provided.
         
         Args:
             session_id: User session identifier
@@ -87,8 +100,21 @@ class CartService:
             if unit_price is not None:
                 item_dict["unit_price"] = unit_price
                 item_dict["amount"] = unit_price * quantity
-                item_dict["product_name"] = product_name
-                item_dict["product_image"] = product_image
+            
+            item_dict["product_name"] = ""
+            item_dict["product_image"] = ""
+            merchant_tools = _get_merchant_tools()
+            if merchant_tools:
+                try:
+                    # Get product details to fetch name and image
+                    products = asyncio.run(merchant_tools.get_products(product_id=product_id, limit=1))
+                    if products and len(products) > 0:
+                        product = products[0]
+                        item_dict["product_name"] = product.get("name", "")
+                        item_dict["product_image"] = product.get("image", "")
+                        logger.info(f"Fetched product info for {product_id}: {product.get('name')}")
+                except Exception as e:
+                    logger.debug(f"Could not fetch product info for {product_id}: {e}")
             
             cart["items"].append(item_dict)
             logger.info(f"Added new item {product_id} to cart")
@@ -105,7 +131,7 @@ class CartService:
             session_id: User session identifier
             
         Returns:
-            Cart data with items
+            Cart data with items (includes product_name and product_image from storage)
         """
         if session_id not in self._carts:
             return {
