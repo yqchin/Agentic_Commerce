@@ -84,7 +84,7 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
             4. If viewing cart → call **view_cart**
             5. If removing from cart → call **remove_from_cart** with product_id
             6. If creating order → call **create_order** (suggest using cart items if cart has items)
-            7. After tools return, provide clear, helpful response, only only short summary of the tool response
+            7. After tools return, provide only short summary of the tool response
 
             **Important:**
             - Encourage users to use cart for multiple items before checkout
