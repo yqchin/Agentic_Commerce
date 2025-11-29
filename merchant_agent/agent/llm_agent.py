@@ -88,7 +88,7 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
             - Encourage users to use cart for multiple items before checkout
             - When user wants to buy, suggest adding to cart first
             - Payment processing automatically delegates to Payment Agent
-            - After tools return, provide only short summary of the tool response
+            - After tools return, provide only very short summary of the tool response
             """,
         tools=[
             tools.search_products,
@@ -127,7 +127,7 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
             - If the user query is unclear, unrelated to previous queries or not related to any agents, ask clarifying questions
             - Do not answer any unrelated questions yourself, always delegate to the appropriate sub-agent
             - Always answer in the context of a merchant and payment agent
-            - Respond only short summaries of tool responses to the user
+            - Respond only very short summaries of tool responses to the user
 
             **Delegation Rules (IMPORTANT):**
             - Delegate at most twice per user message.
