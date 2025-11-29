@@ -87,6 +87,8 @@ class CartService:
             if unit_price is not None:
                 item_dict["unit_price"] = unit_price
                 item_dict["amount"] = unit_price * quantity
+                item_dict["product_name"] = product_name
+                item_dict["product_image"] = product_image
             
             cart["items"].append(item_dict)
             logger.info(f"Added new item {product_id} to cart")
