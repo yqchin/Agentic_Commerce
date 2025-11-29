@@ -153,7 +153,7 @@ async def add_to_cart(
         cart_service = get_cart_service()
         logger.info(f"Adding to cart: {product_id} x{quantity} @ ${unit_price}")
         
-        result = cart_service.add_to_cart(session_id, product_id, quantity, variations, unit_price)
+        result = await cart_service.add_to_cart(session_id, product_id, quantity, variations, unit_price)
         
         if tool_context:
             tool_context.state["cart_result"] = result

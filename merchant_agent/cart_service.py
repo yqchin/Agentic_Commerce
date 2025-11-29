@@ -6,7 +6,6 @@ Stores cart data per session without database
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 import logging
-import asyncio
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +34,7 @@ class CartService:
         self.shipping_calculator = self._default_shipping_calculator
         logger.info("CartService initialized")
     
-    def add_to_cart(
+    async def add_to_cart(
         self,
         session_id: str,
         product_id: str,
@@ -107,7 +106,7 @@ class CartService:
             if merchant_tools:
                 try:
                     # Get product details to fetch name and image
-                    products = asyncio.run(merchant_tools.get_products(product_id=product_id, limit=1))
+                    products = await merchant_tools.get_products(product_id=product_id, limit=1)
                     if products and len(products) > 0:
                         product = products[0]
                         item_dict["product_name"] = product.get("name", "")
@@ -131,7 +130,7 @@ class CartService:
             session_id: User session identifier
             
         Returns:
-            Cart data with items (includes product_name and product_image from storage)
+            Cart data with items
         """
         if session_id not in self._carts:
             return {
