@@ -241,12 +241,19 @@ async def remove_from_cart(
         cart_service = get_cart_service()
         logger.info(f"Removing from cart: {product_id} (session: {session_id})")
         
+        cart_before = cart_service.view_cart(session_id)
+        product_name = product_id
+        for item in cart_before.get("items", []):
+            if item["product_id"] == product_id:
+                product_name = item.get("product_name", product_id)
+                break
+        
         result = cart_service.remove_from_cart(session_id, product_id, variations)
         
         if tool_context:
             tool_context.state["cart_result"] = result
         
-        return f"Removed {product_id} from cart. Cart now has {result['item_count']} item(s)."
+        return f"Removed {product_name} from cart. Cart now has {result['item_count']} item(s)."
 
     except Exception as e:
         logger.error(f"Remove from cart error: {e}")

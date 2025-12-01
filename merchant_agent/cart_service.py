@@ -171,13 +171,20 @@ class CartService:
         original_count = len(cart["items"])
         
         # Remove matching item
-        cart["items"] = [
-            item for item in cart["items"]
-            if not (
-                item["product_id"] == product_id and
-                self._variations_match(item.get("variations", []), variations or [])
-            )
-        ]
+        if variations is None:
+            # Remove all items with this product_id
+            cart["items"] = [
+                item for item in cart["items"]
+                if item["product_id"] != product_id
+            ]
+        else:
+            cart["items"] = [
+                item for item in cart["items"]
+                if not (
+                    item["product_id"] == product_id and
+                    self._variations_match(item.get("variations", []), variations)
+                )
+            ]
         
         removed_count = original_count - len(cart["items"])
         
