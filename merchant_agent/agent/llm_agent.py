@@ -82,7 +82,6 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
             3. If adding to cart → call **add_to_cart** with product_id and quantity
             4. If viewing cart → call **view_cart**
             5. If removing from cart → call **remove_from_cart** with product_id
-            6. If creating order → call **create_order** (suggest using cart items if cart has items)
 
             **Important:**
             - Encourage users to use cart for multiple items before checkout
@@ -95,7 +94,6 @@ def create_merchant_agent(model: str, agent_name: str = 'merchant_agent', custom
             tools.add_to_cart,
             tools.view_cart,
             tools.remove_from_cart,
-            tools.create_order
         ]
     )
 
